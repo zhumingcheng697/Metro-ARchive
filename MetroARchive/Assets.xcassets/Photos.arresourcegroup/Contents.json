@@ -1,0 +1,17 @@
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "resources" : [
+    {
+      "filename" : "Lease.arreferenceimage"
+    },
+    {
+      "filename" : "Target.arreferenceimage"
+    },
+    {
+      "filename" : "Underground.arreferenceimage"
+    }
+  ]
+}

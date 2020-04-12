@@ -1,0 +1,15 @@
+{
+  "images" : [
+    {
+      "filename" : "Lease.jpg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "width" : 2.3999999999999999
+  }
+}
