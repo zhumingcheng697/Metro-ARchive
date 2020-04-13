@@ -12,7 +12,7 @@ The Metro ARchive can be installed on iOS devices.
 
 3. Download the [Metro ARchive](https://testflight.apple.com/join/PCuRPU3x) on TestFlight.
 
-> Due to hardware and software requirements for `ARKit 2` and `ARImageTracking`, only iPhone 6s or later and iPad Pro (9.7-inch) or later on iOS 12.0 or later is supported.
+> Due to hardware and software requirements for `ARKit 2` and `ARImageTracking`, only iPhone 6s or later and iPad Pro (9.7-inch) or later running iOS 12.0 or later are supported.
 
 ## Resources
 

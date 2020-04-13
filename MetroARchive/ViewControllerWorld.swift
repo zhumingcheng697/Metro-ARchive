@@ -20,7 +20,7 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
     @IBOutlet weak var infoButton: UIButton!
     
     @IBAction func openInfo(_ sender: Any) {
-        let browser = SFSafariViewController(url: URL(string: "https://www.sammylevin.com/metro-archive-info")!)
+        let browser = SFSafariViewController(url: URL(string: "https://bit.ly/metro-archive-info")!)
         present(browser, animated: true)
     }
     
@@ -29,6 +29,10 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
     public let restaurantVid1 = AVPlayer(url: Bundle.main.url(forResource: "Contemporary_Restaurant_1", withExtension: "mp4", subdirectory: "art.scnassets")!)
     
     public let restaurantVid2 = AVPlayer(url: Bundle.main.url(forResource: "Contemporary_Closing_1", withExtension: "mp4", subdirectory: "art.scnassets")!)
+    
+    public let historicAudio1 = AVPlayer(url: Bundle.main.url(forResource: "2Doyers_Historic", withExtension: "mp3", subdirectory: "art.scnassets")!)
+    
+    public let contemporaryAudio1 = AVPlayer(url: Bundle.main.url(forResource: "2Doyers_Contemporary", withExtension: "mp3", subdirectory: "art.scnassets")!)
     
     public let tuxedoNode = SCNScene(named: "art.scnassets/tuxedo_v10.scn")!.rootNode.childNodes[0]
     
@@ -52,152 +56,111 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
     
     public var closestIndex = 0;
     
-    func loopVideo(videoPlayer: AVPlayer) {
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: videoPlayer.currentItem, queue: nil) { notification in
-            videoPlayer.seek(to: CMTime.zero)
-            videoPlayer.play()
+    func loopAV(av: AVPlayer) {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: av.currentItem, queue: nil) { notification in
+            av.seek(to: CMTime.zero)
+            av.play()
         }
     }
     
-    func switchMode(withTransition: Bool = true) {
-        if withTransition {
-            switch self.modeSelector.selectedSegmentIndex {
-            case 0:
-                for node in self.modelNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-//                    if node.opacity < 0.01 {
-                        node.runAction(.fadeIn(duration: 0.3))
-                    }
+    func switchMode() {
+        self.historicAudio1.seek(to: CMTime.zero)
+        self.contemporaryAudio1.seek(to: CMTime.zero)
+        
+        switch self.modeSelector.selectedSegmentIndex {
+        case 0:
+            for node in self.modelNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    node.runAction(.fadeIn(duration: 0.3))
                 }
-                for node in self.historicNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-//                    if node.opacity < 0.01 {
-                        node.runAction(.fadeIn(duration: 0.3))
-                        if node.categoryBitMask != 1 << 3 {
-                            node.runAction(.moveBy(x: 0, y: 0.1, z: 0, duration: 0.3))
-                        }
-                    }
-                }
-                for node in self.contemporaryNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-//                    if node.opacity > 0.99 {
-                        node.runAction(.fadeOut(duration: 0.3))
-                        if node.categoryBitMask != 1 << 3 {
-                            node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
-                        }
-                    }
-                }
-                for node in self.immersiveOnlyNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-//                    if node.opacity > 0.99 {
-                        node.runAction(.fadeOut(duration: 0.3))
-                    }
-                }
-            case 2:
-                for node in self.modelNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-//                    if node.opacity > 0.99 {
-                        node.runAction(.fadeOut(duration: 0.3))
-                    }
-                }
-                for node in self.historicNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-//                    if node.opacity > 0.99 {
-                        node.runAction(.fadeOut(duration: 0.3))
-                        if node.categoryBitMask != 1 << 3 {
-                            node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
-                        }
-                    }
-                }
-                for node in self.contemporaryNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-//                    if node.opacity < 0.01 {
-                        node.runAction(.fadeIn(duration: 0.3))
-                        if node.categoryBitMask != 1 << 3 {
-                            node.runAction(.moveBy(x: 0, y: 0.1, z: 0, duration: 0.3))
-                        }
-                    }
-                }
-                for node in self.immersiveOnlyNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-//                    if node.opacity > 0.99 {
-                        node.runAction(.fadeOut(duration: 0.3))
-                    }
-                }
-            default:
-                for node in self.modelNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-//                    if node.opacity < 0.01 {
-                        node.runAction(.fadeIn(duration: 0.3))
-                    }
-                }
-                for node in self.historicNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-//                    if node.opacity > 0.99 {
-                        node.runAction(.fadeOut(duration: 0.3))
-                        if node.categoryBitMask != 1 << 3 {
-                            node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
-                        }
-                    }
-                }
-                for node in self.contemporaryNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-//                    if node.opacity > 0.99 {
-                        node.runAction(.fadeOut(duration: 0.3))
-                        if node.categoryBitMask != 1 << 3 {
-                            node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
-                        }
-                    }
-                }
-                for node in self.immersiveOnlyNodes {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-//                    if node.opacity < 0.01 {
-                        node.runAction(.fadeIn(duration: 0.3))
+            }
+            for node in self.historicNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    node.runAction(.fadeIn(duration: 0.3))
+                    if node.categoryBitMask != 1 << 3 {
+                        node.runAction(.moveBy(x: 0, y: 0.1, z: 0, duration: 0.3))
                     }
                 }
             }
-        } else {
-            switch self.modeSelector.selectedSegmentIndex {
-            case 0:
-                for node in self.modelNodes {
-                    node.opacity = 1
-                }
-                for node in self.historicNodes {
-                    node.opacity = 1
-                }
-                for node in self.contemporaryNodes {
-                    node.opacity = 0
-                }
-                for node in self.immersiveOnlyNodes {
-                    node.opacity = 0
-                }
-            case 2:
-                for node in self.modelNodes {
-                    node.opacity = 0
-                }
-                for node in self.historicNodes {
-                    node.opacity = 0
-                }
-                for node in self.contemporaryNodes {
-                    node.opacity = 1
-                }
-                for node in self.immersiveOnlyNodes {
-                    node.opacity = 0
-                }
-            default:
-                for node in self.modelNodes {
-                    node.opacity = 1
-                }
-                for node in self.historicNodes {
-                    node.opacity = 0
-                }
-                for node in self.contemporaryNodes {
-                    node.opacity = 0
-                }
-                for node in self.immersiveOnlyNodes {
-                    node.opacity = 1
+            for node in self.contemporaryNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    node.runAction(.fadeOut(duration: 0.3))
+                    if node.categoryBitMask != 1 << 3 {
+                        node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
+                    }
                 }
             }
+            for node in self.immersiveOnlyNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    node.runAction(.fadeOut(duration: 0.3))
+                }
+            }
+        case 2:
+            for node in self.modelNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    node.runAction(.fadeOut(duration: 0.3))
+                }
+            }
+            for node in self.historicNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    node.runAction(.fadeOut(duration: 0.3))
+                    if node.categoryBitMask != 1 << 3 {
+                        node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
+                    }
+                }
+            }
+            for node in self.contemporaryNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    node.runAction(.fadeIn(duration: 0.3))
+                    if node.categoryBitMask != 1 << 3 {
+                        node.runAction(.moveBy(x: 0, y: 0.1, z: 0, duration: 0.3))
+                    }
+                }
+            }
+            for node in self.immersiveOnlyNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    node.runAction(.fadeOut(duration: 0.3))
+                }
+            }
+        default:
+            for node in self.modelNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    node.runAction(.fadeIn(duration: 0.3))
+                }
+            }
+            for node in self.historicNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    node.runAction(.fadeOut(duration: 0.3))
+                    if node.categoryBitMask != 1 << 3 {
+                        node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
+                    }
+                }
+            }
+            for node in self.contemporaryNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    node.runAction(.fadeOut(duration: 0.3))
+                    if node.categoryBitMask != 1 << 3 {
+                        node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
+                    }
+                }
+            }
+            for node in self.immersiveOnlyNodes {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    node.runAction(.fadeIn(duration: 0.3))
+                }
+            }
+        }
+        
+        switch self.modeSelector.selectedSegmentIndex {
+        case 0:
+            self.historicAudio1.play()
+            self.contemporaryAudio1.pause()
+        case 2:
+            self.historicAudio1.pause()
+            self.contemporaryAudio1.play()
+        default:
+            self.historicAudio1.pause()
+            self.contemporaryAudio1.pause()
         }
     }
     
@@ -220,9 +183,11 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
         // Set the scene to the view
         sceneView.scene = scene
         
-        for vid in [self.restaurantVid1, self.restaurantVid2] {
-            loopVideo(videoPlayer: vid)
+        for av in [self.restaurantVid1, self.restaurantVid2, self.historicAudio1, self.contemporaryAudio1] {
+            loopAV(av: av)
         }
+        
+        try? AVAudioSession.sharedInstance().setCategory(.playback)
         
         self.modeSelector.alpha = 0
         self.modeSelector.isUserInteractionEnabled = false
@@ -242,6 +207,14 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
         configuration.detectionImages = detectionImages
         configuration.maximumNumberOfTrackedImages = 3
         
+        if self.historicAudio1.currentTime() != CMTime.zero {
+            self.historicAudio1.play()
+        }
+        
+        if self.contemporaryAudio1.currentTime() != CMTime.zero {
+            self.contemporaryAudio1.play()
+        }
+        
         // Run the view's session
         sceneView.session.run(configuration)
     }
@@ -251,6 +224,9 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
         
         // Pause the view's session
         sceneView.session.pause()
+        
+        self.historicAudio1.pause()
+        self.contemporaryAudio1.pause()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -504,7 +480,6 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                 iconNode.addChildNode(iconNode8)
                 
                 self.iconNodes = iconNode
-//                self.immersiveOnlyNodes.append(iconNode)
                 
                 node.addChildNode(iconNode)
                 
@@ -591,8 +566,6 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                 
                 self.trackerNodes = trackerNode
                 
-//                self.immersiveOnlyNodes.append(trackerNode)
-                
                 node.addChildNode(trackerNode)
                 
                 let bgPlane1 = SCNPlane(width: CGFloat(0.165 * factor), height: CGFloat(0.165 * factor))
@@ -673,8 +646,8 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
             node.addChildNode(vidNode)
             node.addChildNode(modelNode)
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                self.switchMode(withTransition: true)
+            DispatchQueue.main.async {
+                self.switchMode()
                 UIView.animate(withDuration: 0.5, animations: {
                     self.modeSelector.alpha = 1
                 })
@@ -687,8 +660,7 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
             }
             
             if n != 3 {
-            node.opacity = 0
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                node.opacity = 0
                 node.runAction(.fadeIn(duration: 0.5))
             }
         }
@@ -768,11 +740,18 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
     
     func sessionWasInterrupted(_ session: ARSession) {
         // Inform the user that the session has been interrupted, for example, by presenting an overlay
-
+        self.historicAudio1.pause()
+        self.contemporaryAudio1.pause()
     }
     
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
+        if self.historicAudio1.currentTime() != CMTime.zero {
+            self.historicAudio1.play()
+        }
         
+        if self.contemporaryAudio1.currentTime() != CMTime.zero {
+            self.contemporaryAudio1.play()
+        }
     }
 }
