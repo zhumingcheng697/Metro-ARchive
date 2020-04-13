@@ -17,12 +17,16 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
     
     @IBOutlet weak var modeSelector: UISegmentedControl!
     
+    @IBOutlet weak var modeLabel: UILabel!
+    
     @IBOutlet weak var infoButton: UIButton!
     
     @IBAction func openInfo(_ sender: Any) {
         let browser = SFSafariViewController(url: URL(string: "https://bit.ly/metro-archive-info")!)
         present(browser, animated: true)
     }
+    
+    private var timer = Timer()
     
     public let undergroundVid = AVPlayer(url: Bundle.main.url(forResource: "Underground", withExtension: "mov", subdirectory: "art.scnassets")!)
     
@@ -162,10 +166,52 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
             self.historicAudio1.pause()
             self.contemporaryAudio1.pause()
         }
+        
+        if timer.isValid {
+            timer.invalidate()
+            UIView.animate(withDuration: 0.5, animations: {
+                self.modeLabel.alpha = 0
+            })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                switch self.modeSelector.selectedSegmentIndex {
+                case 0:
+                    self.modeLabel.text = "Historic Mode"
+                case 2:
+                    self.modeLabel.text = "Contemporary Mode"
+                default:
+                    self.modeLabel.text = "Immersive Mode"
+                }
+                
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.modeLabel.alpha = 1
+                })
+            }
+        } else {
+            switch self.modeSelector.selectedSegmentIndex {
+            case 0:
+                self.modeLabel.text = "Historic Mode"
+            case 2:
+                self.modeLabel.text = "Contemporary Mode"
+            default:
+                self.modeLabel.text = "Immersive Mode"
+            }
+
+            UIView.animate(withDuration: 0.5, animations: {
+                self.modeLabel.alpha = 1
+            })
+        }
+        
+        timer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.hideModeLable), userInfo: nil, repeats: false)
     }
     
     @objc func switchModeListener(sender: UISegmentedControl) {
         self.switchMode()
+    }
+    
+    @objc func hideModeLable() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.modeLabel.alpha = 0
+        })
     }
     
     override func viewDidLoad() {
@@ -193,8 +239,13 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
         self.modeSelector.isUserInteractionEnabled = false
         self.modeSelector.addTarget(self, action: #selector(self.switchModeListener(sender:)), for: .valueChanged)
         
+        self.modeLabel.alpha = 0
+        self.modeLabel.text = ""
+        self.modeLabel.layer.cornerRadius = 20
+        self.modeLabel.layer.masksToBounds = true
+        
         self.infoButton.backgroundColor = UIColor(named: "selectedSegment")
-        self.infoButton.layer.cornerRadius = 7
+        self.infoButton.layer.cornerRadius = 20
     }
     
     override func viewWillAppear(_ animated: Bool) {

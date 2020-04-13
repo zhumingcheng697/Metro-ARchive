@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "info.circle.pdf",
+      "filename" : "info_b.pdf",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,7 +12,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "info.circle_w.pdf",
+      "filename" : "info_b_w.pdf",
       "idiom" : "universal",
       "scale" : "1x"
     },

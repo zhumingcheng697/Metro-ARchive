@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="IiO-nz-Wia">
-    <device id="retina5_9" orientation="portrait" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
@@ -14,15 +14,15 @@
             <objects>
                 <viewController id="IiO-nz-Wia" customClass="ViewControllerWorld" customModule="Metro_ARchive" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bdS-x3-gQx">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J3B-lE-SBX">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </arscnView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="yKw-pb-8wa">
-                                <rect key="frame" x="42.666666666666657" y="723" width="290" height="41"/>
+                                <rect key="frame" x="62" y="807" width="290" height="41"/>
                                 <color key="backgroundColor" name="segmentRole"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="M73-Xl-JFm"/>
@@ -37,42 +37,57 @@
                                 <color key="selectedSegmentTintColor" name="selectedSegment"/>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Yn-du-ptW">
-                                <rect key="frame" x="321" y="52" width="40" height="40"/>
+                                <rect key="frame" x="360" y="52" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Ew3-O3-6fJ"/>
                                     <constraint firstAttribute="width" constant="40" id="eFP-ob-xuT"/>
                                 </constraints>
-                                <state key="normal" image="info.circle"/>
+                                <state key="normal" image="info"/>
                                 <connections>
                                     <action selector="openInfo:" destination="IiO-nz-Wia" eventType="touchUpInside" id="1br-HT-0AY"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Contemporary Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="210" translatesAutoresizingMaskIntoConstraints="NO" id="yfl-hz-U8I">
+                                <rect key="frame" x="109.66666666666669" y="52" width="195" height="40"/>
+                                <color key="backgroundColor" name="selectedSegment"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="195" id="3lJ-gy-EVi"/>
+                                    <constraint firstAttribute="height" constant="40" id="dkE-WM-ZgG"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <color key="tintColor" name="selectedSegment"/>
                         <constraints>
                             <constraint firstItem="ozy-F2-M6K" firstAttribute="bottom" secondItem="yKw-pb-8wa" secondAttribute="bottom" constant="15" id="2Ku-t4-TUx"/>
+                            <constraint firstItem="yfl-hz-U8I" firstAttribute="top" secondItem="ozy-F2-M6K" secondAttribute="top" constant="8" id="P4Y-SU-cbh"/>
+                            <constraint firstItem="yfl-hz-U8I" firstAttribute="top" secondItem="ozy-F2-M6K" secondAttribute="top" constant="8" id="Rnz-wK-Rsv"/>
                             <constraint firstItem="6Yn-du-ptW" firstAttribute="top" secondItem="ozy-F2-M6K" secondAttribute="top" constant="8" id="TFB-Cy-tj4"/>
                             <constraint firstItem="yKw-pb-8wa" firstAttribute="centerX" secondItem="bdS-x3-gQx" secondAttribute="centerX" id="jGh-n8-xvy"/>
                             <constraint firstItem="ozy-F2-M6K" firstAttribute="trailing" secondItem="6Yn-du-ptW" secondAttribute="trailing" constant="14" id="psp-IE-pg7"/>
+                            <constraint firstItem="yfl-hz-U8I" firstAttribute="centerX" secondItem="bdS-x3-gQx" secondAttribute="centerX" id="rNK-zS-CV3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ozy-F2-M6K"/>
                     </view>
                     <connections>
                         <outlet property="infoButton" destination="6Yn-du-ptW" id="KqZ-tg-gR2"/>
+                        <outlet property="modeLabel" destination="yfl-hz-U8I" id="W9B-2t-mec"/>
                         <outlet property="modeSelector" destination="yKw-pb-8wa" id="kkv-bZ-9Kv"/>
                         <outlet property="sceneView" destination="J3B-lE-SBX" id="Jni-5X-2YW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JdG-qe-zC5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1044.9275362318842" y="415.84821428571428"/>
+            <point key="canvasLocation" x="1044.375" y="415"/>
         </scene>
     </scenes>
     <color key="tintColor" name="Orange"/>
     <resources>
         <image name="eye_v2" width="24" height="24"/>
-        <image name="info.circle" width="24" height="25"/>
+        <image name="info" width="16" height="16"/>
         <image name="past_v2" width="20" height="20"/>
         <image name="present_v2" width="20" height="20"/>
         <namedColor name="Orange">
