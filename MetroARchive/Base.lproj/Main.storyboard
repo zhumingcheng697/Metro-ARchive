@@ -38,6 +38,7 @@
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Yn-du-ptW">
                                 <rect key="frame" x="360" y="52" width="40" height="40"/>
+                                <color key="backgroundColor" name="selectedSegment"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Ew3-O3-6fJ"/>
                                     <constraint firstAttribute="width" constant="40" id="eFP-ob-xuT"/>

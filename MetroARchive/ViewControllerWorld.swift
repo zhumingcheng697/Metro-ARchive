@@ -244,7 +244,6 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
         self.modeLabel.layer.cornerRadius = 20
         self.modeLabel.layer.masksToBounds = true
         
-        self.infoButton.backgroundColor = UIColor(named: "selectedSegment")
         self.infoButton.layer.cornerRadius = 20
     }
     
