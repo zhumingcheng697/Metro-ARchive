@@ -61,8 +61,7 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       enableGPUValidationMode = "1"
-      allowLocationSimulation = "YES"
-      allowDeviceSensorReplayData = "YES">
+      allowLocationSimulation = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference

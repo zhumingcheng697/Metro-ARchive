@@ -26,7 +26,9 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
         present(browser, animated: true)
     }
     
-    private var timer = Timer()
+    private var hideTimer = Timer()
+    
+    private var showTimer = Timer()
     
     public let undergroundVid = AVPlayer(url: Bundle.main.url(forResource: "Underground", withExtension: "mov", subdirectory: "art.scnassets")!)
     
@@ -68,9 +70,6 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
     }
     
     func switchMode() {
-        self.historicAudio1.seek(to: CMTime.zero)
-        self.contemporaryAudio1.seek(to: CMTime.zero)
-        
         switch self.modeSelector.selectedSegmentIndex {
         case 0:
             for node in self.modelNodes {
@@ -82,7 +81,7 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     node.runAction(.fadeIn(duration: 0.3))
                     if node.categoryBitMask != 1 << 3 {
-                        node.runAction(.moveBy(x: 0, y: 0.1, z: 0, duration: 0.3))
+                        node.runAction(.move(to: SCNVector3(-0.5, 2.1, 2), duration: 0.3))
                     }
                 }
             }
@@ -90,7 +89,7 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     node.runAction(.fadeOut(duration: 0.3))
                     if node.categoryBitMask != 1 << 3 {
-                        node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
+                        node.runAction(.move(to: SCNVector3(-0.5, 1.9, 2), duration: 0.3))
                     }
                 }
             }
@@ -109,7 +108,7 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     node.runAction(.fadeOut(duration: 0.3))
                     if node.categoryBitMask != 1 << 3 {
-                        node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
+                        node.runAction(.move(to: SCNVector3(-0.5, 1.9, 2), duration: 0.3))
                     }
                 }
             }
@@ -117,7 +116,7 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     node.runAction(.fadeIn(duration: 0.3))
                     if node.categoryBitMask != 1 << 3 {
-                        node.runAction(.moveBy(x: 0, y: 0.1, z: 0, duration: 0.3))
+                        node.runAction(.move(to: SCNVector3(-0.5, 2.1, 2), duration: 0.3))
                     }
                 }
             }
@@ -136,7 +135,7 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     node.runAction(.fadeOut(duration: 0.3))
                     if node.categoryBitMask != 1 << 3 {
-                        node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
+                        node.runAction(.move(to: SCNVector3(-0.5, 1.9, 2), duration: 0.3))
                     }
                 }
             }
@@ -144,7 +143,7 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     node.runAction(.fadeOut(duration: 0.3))
                     if node.categoryBitMask != 1 << 3 {
-                        node.runAction(.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3))
+                        node.runAction(.move(to: SCNVector3(-0.5, 1.9, 2), duration: 0.3))
                     }
                 }
             }
@@ -155,37 +154,32 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
             }
         }
         
-        switch self.modeSelector.selectedSegmentIndex {
-        case 0:
-            self.historicAudio1.play()
-            self.contemporaryAudio1.pause()
-        case 2:
-            self.historicAudio1.pause()
-            self.contemporaryAudio1.play()
-        default:
-            self.historicAudio1.pause()
-            self.contemporaryAudio1.pause()
+        if self.iconNodes.childNodes.count == 8 {
+            self.historicAudio1.seek(to: CMTime.zero)
+            self.contemporaryAudio1.seek(to: CMTime.zero)
+            
+            switch self.modeSelector.selectedSegmentIndex {
+            case 0:
+                self.historicAudio1.play()
+                self.contemporaryAudio1.pause()
+            case 2:
+                self.historicAudio1.pause()
+                self.contemporaryAudio1.play()
+            default:
+                self.historicAudio1.pause()
+                self.contemporaryAudio1.pause()
+            }
         }
         
-        if timer.isValid {
-            timer.invalidate()
+        if hideTimer.isValid || showTimer.isValid {
+            hideTimer.invalidate()
+            showTimer.invalidate()
+            
             UIView.animate(withDuration: 0.5, animations: {
                 self.modeLabel.alpha = 0
             })
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                switch self.modeSelector.selectedSegmentIndex {
-                case 0:
-                    self.modeLabel.text = "Historic Mode"
-                case 2:
-                    self.modeLabel.text = "Contemporary Mode"
-                default:
-                    self.modeLabel.text = "Immersive Mode"
-                }
-                
-                UIView.animate(withDuration: 0.5, animations: {
-                    self.modeLabel.alpha = 1
-                })
-            }
+            
+            self.showTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.showModeLable), userInfo: nil, repeats: false)
         } else {
             switch self.modeSelector.selectedSegmentIndex {
             case 0:
@@ -199,9 +193,9 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
             UIView.animate(withDuration: 0.5, animations: {
                 self.modeLabel.alpha = 1
             })
+            
+            self.hideTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.hideModeLable), userInfo: nil, repeats: false)
         }
-        
-        timer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.hideModeLable), userInfo: nil, repeats: false)
     }
     
     @objc func switchModeListener(sender: UISegmentedControl) {
@@ -212,6 +206,25 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
         UIView.animate(withDuration: 0.5, animations: {
             self.modeLabel.alpha = 0
         })
+    }
+    
+    @objc func showModeLable() {
+        DispatchQueue.main.async {
+            switch self.modeSelector.selectedSegmentIndex {
+            case 0:
+                self.modeLabel.text = "Historic Mode"
+            case 2:
+                self.modeLabel.text = "Contemporary Mode"
+            default:
+                self.modeLabel.text = "Immersive Mode"
+            }
+            
+            UIView.animate(withDuration: 0.5, animations: {
+                self.modeLabel.alpha = 1
+            })
+            
+            self.hideTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.hideModeLable), userInfo: nil, repeats: false)
+        }
     }
     
     override func viewDidLoad() {
@@ -773,11 +786,13 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                     self.iconNodes.childNodes[self.closestIndex].opacity = 1
                 }
             default:
-                for icon in self.iconNodes.childNodes {
-                    icon.opacity = 0
+                if self.iconNodes.childNodes.count == 8 {
+                    for icon in self.iconNodes.childNodes {
+                        icon.opacity = 0
+                    }
+                    
+                    self.iconNodes.childNodes[0].opacity = 1
                 }
-                
-                self.iconNodes.childNodes[0].opacity = 1
             }
         }
         
