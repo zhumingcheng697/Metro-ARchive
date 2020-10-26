@@ -330,12 +330,6 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
             var vid: AVPlayer
             var modelNode: SCNNode
             switch imageAnchor.referenceImage.name {
-                
-            case "Underground":
-                n = 1
-                vid = self.undergroundVid
-                modelNode = self.buildingNode
-                modelNode.scale = SCNVector3(0.001,0.001,0.001)
             
             case "Lease":
                 n = 2
@@ -672,7 +666,10 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                 }
                 
             default:
-                return SCNNode()
+                n = 1
+                vid = self.undergroundVid
+                modelNode = self.buildingNode
+                modelNode.scale = SCNVector3(0.001,0.001,0.001)
             }
             
             var vidPlane: SCNPlane
@@ -704,7 +701,9 @@ class ViewControllerWorld: UIViewController, ARSCNViewDelegate {
                 self.immersiveOnlyNodes.append(modelNode)
             }
             
-            vidNode.opacity = 0
+            if n != 1 {
+                vidNode.opacity = 0
+            }
             
             node.addChildNode(vidNode)
             node.addChildNode(modelNode)
